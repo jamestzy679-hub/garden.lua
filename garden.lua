@@ -1,81 +1,54 @@
 # garden.lua
--- =========================================
--- SIMPLE GROW A GARDEN SYSTEM
--- No loader • No errors • Beginner friendly
--- =========================================
+-- 🌱 Grow A Garden Floating UI
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.Name = "GardenUI"
 
-local Garden = {}
+-- MAIN WINDOW
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 350, 0, 250)
+frame.Position = UDim2.new(0.3, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Active = true
+frame.Draggable = true
 
--- Storage for plants
-Garden.plants = {}
+-- TITLE
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Text = "🌱 Grow A Garden HUB"
+title.TextSize = 20
+title.TextColor3 = Color3.fromRGB(0, 255, 150)
+title.BackgroundTransparency = 1
 
--- =============================
--- Create Plant
--- =============================
-function Garden.plant(seedName)
-    local plant = {
-        name = seedName,
-        stage = 1,
-        maxStage = 4
-    }
+-- PLANT BUTTON
+local plantBtn = Instance.new("TextButton", frame)
+plantBtn.Size = UDim2.new(0.8, 0, 0, 40)
+plantBtn.Position = UDim2.new(0.1, 0, 0.3, 0)
+plantBtn.Text = "🌿 Plant Seed"
+plantBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 100)
 
-    table.insert(Garden.plants, plant)
+plantBtn.MouseButton1Click:Connect(function()
+    print("Planting seed...")
+end)
 
-    print("🌱 Seed planted:", seedName)
+-- WATER BUTTON
+local waterBtn = Instance.new("TextButton", frame)
+waterBtn.Size = UDim2.new(0.8, 0, 0, 40)
+waterBtn.Position = UDim2.new(0.1, 0, 0.55, 0)
+waterBtn.Text = "💧 Water Plants"
+waterBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
 
-    -- Grow automatically
-    coroutine.wrap(function()
-        while plant.stage < plant.maxStage do
-            wait(3)
-            plant.stage = plant.stage + 1
-            print("🌿 " .. plant.name .. " grew to stage " .. plant.stage)
-        end
+waterBtn.MouseButton1Click:Connect(function()
+    print("Watering plants...")
+end)
 
-        print("✅ " .. plant.name .. " is READY to harvest!")
-    end)()
-end
+-- CLOSE BUTTON
+local close = Instance.new("TextButton", frame)
+close.Size = UDim2.new(0, 30, 0, 30)
+close.Position = UDim2.new(1, -35, 0, 5)
+close.Text = "X"
+close.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
 
--- =============================
--- Harvest Plants
--- =============================
-function Garden.harvest()
-    for i = #Garden.plants, 1, -1 do
-        local plant = Garden.plants[i]
-
-        if plant.stage >= plant.maxStage then
-            print("🌾 Harvested:", plant.name)
-            table.remove(Garden.plants, i)
-        end
-    end
-end
-
--- =============================
--- Show Garden Status
--- =============================
-function Garden.status()
-    print("🌼 Garden Status:")
-
-    if #Garden.plants == 0 then
-        print("No plants growing.")
-        return
-    end
-
-    for i, plant in ipairs(Garden.plants) do
-        print(i .. ". " .. plant.name .. " | Stage: " .. plant.stage)
-    end
-end
-
--- =============================
--- Example Usage
--- =============================
-
-Garden.plant("Carrot")
-Garden.plant("Tomato")
-
-wait(10)
-Garden.status()
-
-wait(5)
-Garden.harvest()
-
-return Garden
+close.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
